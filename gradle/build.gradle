@@ -27,6 +27,7 @@ plugins {
   id 'net.ltgt.errorprone' version '0.6.1'
   id 'checkstyle'
   id "com.moowork.node" version "1.2.0"
+  id 'com.diffplug.gradle.spotless' version '3.17.0'
 }
 
 apply from: 'dependencies.gradle'
@@ -261,6 +262,19 @@ subprojects {
   apply plugin: 'net.ltgt.apt'
   apply plugin: 'net.ltgt.errorprone'
   apply plugin: 'checkstyle'
+  apply plugin: 'com.diffplug.gradle.spotless'
+
+  spotless {
+    java {
+      target project.fileTree("${javaDir}/..") {
+        include "java/**/*.java"
+        include "javatests/**/*.java"
+        // there are some files that have degenerate interactions with the GJF formatter
+        exclude "**/flows/FlowComponent.java"
+      }
+      googleJavaFormat("1.7")
+    }
+  }
 
   // Checkstyle should run as part of the testing task
   tasks.test.dependsOn tasks.checkstyleMain
