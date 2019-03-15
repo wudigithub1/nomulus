@@ -57,3 +57,6 @@ env:
 # See notes on the CREDZ and REPORT_GCS_BUCKET environment variable in the
 # comments at the top of the file.
 script: cd gradle && echo "$CREDZ" >credz.json && chmod 755 ./gradlew && travis_wait 45 ./gradlew build  -P gcsBucket="$REPORT_GCS_BUCKET" -P gcsCredentialsFile=credz.json -P gcsMultithreadedUpload=yes
+
+after_success:
+  - bash <(curl -s https://copilot.blackducksoftware.com/ci/travis/scripts/upload)
